@@ -23,7 +23,7 @@ def encode_url(url, char2idx, maxlen=200):
         encoded += [0] * (maxlen - len(encoded))
     return encoded
 
-def preprocess_dataset(csv_path, save_path='artifacts/', maxlen=200, test_size=0.2):
+def preprocess_dataset(csv_path, save_path='../artifacts/', maxlen=200, test_size=0.2):
     df = pd.read_csv(csv_path)
     df = df[['URL', 'label']]
     df['label'] = df['label'].apply(lambda x: 0 if x == 1 else 1)
