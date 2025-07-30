@@ -58,6 +58,6 @@ This architecture strikes a balance between simplicity and performance — makin
 
 **Anuranan Chetia**  
 Deep Learning | Cybersecurity | AI Research  
-[GitHub](https://github.com/Adderalfox) • [LinkedIn](www.linkedin.com/in/anuranan-chetia-74452428a)
+[GitHub](https://github.com/Adderalfox) • [LinkedIn](https://www.linkedin.com/in/anuranan-chetia-74452428a/)
 
 ---
