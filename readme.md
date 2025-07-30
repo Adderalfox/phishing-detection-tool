@@ -45,10 +45,12 @@ This architecture strikes a balance between simplicity and performance — makin
 
 ## 📂 Repository Overview
 
-- `model.py` – CharCNN architecture  
-- `main.py` – Training and evaluation pipeline  
+- `/notebooks` – Notebook for experimentation
+- `/src/model.py` – CharCNN architecture  
+- `/src/train.py` – Training and evaluation pipeline  
+- `/src/preprocess.py` – Preprocessing the data
 - `data/` – Dataset preprocessing and loaders  
-- `utils/` – Helper functions and metrics
+- `artifacts/` – Stores the Meta-data of preprocessing
 
 ---
 
