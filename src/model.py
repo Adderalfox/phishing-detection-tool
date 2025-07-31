@@ -1,8 +1,8 @@
 import torch.nn as nn
 
-class PhishCNN(nn.Module):
+class PhishModel(nn.Module):
     def __init__(self, vocab_size, embed_dim=128, num_classes=2, maxlen=200):
-        super(PhishCNN, self).__init__()
+        super(PhishModel, self).__init__()
         
         self.embedding = nn.Embedding(vocab_size + 1, embed_dim, padding_idx=0)
 

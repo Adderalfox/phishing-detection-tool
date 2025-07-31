@@ -7,7 +7,7 @@ from tqdm import tqdm
 import os
 import json
 from preprocess import preprocess_dataset
-from model import PhishCNN
+from model import PhishModel
 
 # ========== Config ==========
 CSV_PATH = '../data/Phishing_URL_Dataset.csv'
@@ -82,7 +82,7 @@ def main():
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-    model = PhishCNN(vocab_size).to(DEVICE)
+    model = PhishModel(vocab_size).to(DEVICE)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 

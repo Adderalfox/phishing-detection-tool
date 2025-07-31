@@ -3,7 +3,7 @@ import torch
 import json
 from torch.utils.data import DataLoader
 from sklearn.metrics import classification_report, confusion_matrix
-from model import PhishCNN
+from model import PhishModel
 from preprocess import preprocess_dataset
 from train import PhishingDataset
 from tqdm import tqdm
@@ -44,7 +44,7 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE)
 
     print("Loading Model...")
-    model = PhishCNN(vocab_size).to(DEVICE)
+    model = PhishModel(vocab_size).to(DEVICE)
     model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE, weights_only=True))
 
     print("Running evaluation...")
