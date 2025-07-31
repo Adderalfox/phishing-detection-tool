@@ -1,6 +1,6 @@
-# 🛡️ Phishing Detection Using Vanilla CNN (CharCNN)
+# 🛡️ Phishing Detection Tool
 
-This project presents a character-level Convolutional Neural Network (CharCNN) for detecting phishing URLs. It leverages deep learning to automatically learn patterns from raw character input — enabling robust and scalable phishing detection without manual feature engineering.
+This project presents a character-level Convolutional Neural Network for detecting phishing URLs. It leverages deep learning to automatically learn patterns from raw character input — enabling robust and scalable phishing detection without manual feature engineering.
 
 ---
 
