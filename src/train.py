@@ -8,6 +8,11 @@ import os
 import json
 from preprocess import preprocess_dataset
 from model import PhishModel
+import mlflow
+import mlflow.pytorch
+
+mlflow.set_tracking_uri("file:./mlruns")
+mlflow.set_experiment("Phishing Detection")
 
 # ========== Config ==========
 CSV_PATH = '../data/Phishing_URL_Dataset.csv'
@@ -68,42 +73,52 @@ def evaluate(model, dataloader):
 
 # ========== Main Function ==========
 def main():
-    print('Preprocessing...')
-    X_train, X_val, y_train, y_val = preprocess_dataset(CSV_PATH, save_path=ARTIFACTS_PATH)
+    with mlflow.start_run(run_name="cnn-lstm-run"):
+        mlflow.log_param("lr", LEARNING_RATE)
+        mlflow.log_param("model", "CNN-LSTM")
+        mlflow.log_param("batch_size", BATCH_SIZE)
+        mlflow.log_param("epochs", EPOCHS)
 
-    with open(os.path.join(ARTIFACTS_PATH, 'preprocess_meta.json')) as f:
-        meta = json.load(f)
-    vocab_size = len(meta['char2idx'])
-    # maxlen = meta['maxlen']
+        print('Preprocessing...')
+        X_train, X_val, y_train, y_val = preprocess_dataset(CSV_PATH, save_path=ARTIFACTS_PATH)
 
-    train_dataset = PhishingDataset(X_train, y_train)
-    val_dataset = PhishingDataset(X_val, y_val)
+        with open(os.path.join(ARTIFACTS_PATH, 'preprocess_meta.json')) as f:
+            meta = json.load(f)
+        vocab_size = len(meta['char2idx'])
+        # maxlen = meta['maxlen']
 
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
+        train_dataset = PhishingDataset(X_train, y_train)
+        val_dataset = PhishingDataset(X_val, y_val)
 
-    model = PhishModel(vocab_size).to(DEVICE)
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+        train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+        val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-    os.makedirs(MODEL_SAVE_DIR, exist_ok=True)
-    best_accuracy = 0.0
+        model = PhishModel(vocab_size).to(DEVICE)
+        loss_fn = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    for epoch in range(EPOCHS):
-        print(f'\nEpoch {epoch+1}/{EPOCHS}')
-        train_loss = train_one_epoch(model, train_loader, optimizer, loss_fn)
-        print(f'\nTraining Loss: {train_loss:.4f}')
+        os.makedirs(MODEL_SAVE_DIR, exist_ok=True)
+        best_accuracy = 0.0
 
-        val_accuracy = evaluate(model, val_loader)
-        print(f'\nValidation Accuracy: {val_accuracy:.4f}')
+        for epoch in range(EPOCHS):
+            print(f'\nEpoch {epoch+1}/{EPOCHS}')
+            train_loss = train_one_epoch(model, train_loader, optimizer, loss_fn)
+            print(f'\nTraining Loss: {train_loss:.4f}')
 
-        if val_accuracy > best_accuracy:
-            best_accuracy = val_accuracy
-            checkpoint_path = os.path.join(MODEL_SAVE_DIR, 'best_model.pt')
-            torch.save(model.state_dict(), checkpoint_path)
-            print('The model has been saved!')
-    
-    print('Training complete.')
+            val_accuracy = evaluate(model, val_loader)
+            print(f'\nValidation Accuracy: {val_accuracy:.4f}')
+
+            mlflow.log_metric("train_loss", train_loss, step=epoch)
+            mlflow.log_metric("val_accuracy", val_accuracy, step=epoch)
+
+            if val_accuracy > best_accuracy:
+                best_accuracy = val_accuracy
+                checkpoint_path = os.path.join(MODEL_SAVE_DIR, 'best_model.pt')
+                torch.save(model.state_dict(), checkpoint_path)
+                print('The model has been saved!')
+        
+        mlflow.pytorch.log_model(model, name="CNN-LSTM")
+        print('Training complete.')
 
 if __name__ == '__main__':
     main()
