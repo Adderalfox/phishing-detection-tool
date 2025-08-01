@@ -13,9 +13,9 @@ from model import PhishModel
 CSV_PATH = '../data/Phishing_URL_Dataset.csv'
 ARTIFACTS_PATH = '../artifacts/'
 MODEL_SAVE_DIR = '../models/'
-BATCH_SIZE = 64
-EPOCHS = 10
-LEARNING_RATE = 0.001
+BATCH_SIZE = 32
+EPOCHS = 20
+LEARNING_RATE = 0.0005
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # ========== Dataset Class ==========
