@@ -15,12 +15,23 @@ This project presents a character-level Convolutional Neural Network for detecti
 
 ## 🧠 Model Overview
 
-A lightweight **Vanilla CNN** built using **PyTorch**, optimized for sequence classification:
+A robust **CNN + BiLSTM** hybrid model built with **PyTorch** for URL-based phishing detection:
 
-- **Embedding Layer**: Converts characters into dense vectors  
-- **2 Convolutional Blocks**: Detects character-level patterns in URL strings  
-- **Fully Connected Layers**: Outputs binary classification (phishing or not)  
-- Regularized using **Dropout**, activated with **ReLU**
+- **Embedding Layer**  
+  Transforms input tokens into dense 256-dimensional vectors
+
+- **2 Convolutional Blocks**  
+  - `Conv1d → ReLU → MaxPool` structure  
+  - First block uses a kernel size of 5, the second uses 3  
+  - Captures both broad and fine-grained character-level patterns
+
+- **Bidirectional LSTM**  
+  - Stacked 2-layer **BiLSTM** with 256 hidden units  
+  - Captures contextual dependencies in both forward and backward directions
+
+- **Fully Connected Layers**  
+  - Dense layers with **ReLU** and **Dropout (0.4)** for regularization  
+  - Final output: Binary classification — **Phishing** or **Legitimate**
 
 This architecture strikes a balance between simplicity and performance — making it ideal for real-time deployment or browser-based extensions.
 
@@ -29,7 +40,7 @@ This architecture strikes a balance between simplicity and performance — makin
 ## 🚀 Key Highlights
 
 - 📌 **Character-Level Input**: Works directly on raw URLs — no manual feature extraction
-- ⚙️ **Built from Scratch**: Vanilla CNN implementation without pre-trained models
+- ⚙️ **Built from Scratch**: CNN+LSTM implementation without pre-trained models
 - 📈 **High Accuracy**: Achieved strong classification performance on a real-world dataset
 - 🔬 **Interpretable and Extensible**: Clean design ready for future integration with NLP or hybrid models
 
@@ -46,7 +57,7 @@ This architecture strikes a balance between simplicity and performance — makin
 ## 📂 Repository Overview
 
 - `/notebooks` – Notebook for experimentation
-- `/src/model.py` – CharCNN architecture  
+- `/src/model.py` – PhishModel architecture  
 - `/src/train.py` – Training and evaluation pipeline  
 - `/src/preprocess.py` – Preprocessing the data
 - `data/` – Dataset preprocessing and loaders  
