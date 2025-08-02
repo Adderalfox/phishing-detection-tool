@@ -61,7 +61,7 @@ def plot_comparison_graph(metrics):
 
     plt.xticks([i + 0.25 for i in x], datasets)
     plt.ylabel('Score')
-    plt.title('CNN+LSTM Model Comparison Across Datasets')
+    plt.title('CNN Model Comparison Across Datasets')
     plt.legend()
     plt.tight_layout()
     plt.savefig(os.path.join(GRAPH_DIR, 'model_comparison.png'))

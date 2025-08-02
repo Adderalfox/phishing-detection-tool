@@ -123,7 +123,7 @@ def main():
                 torch.save(model.state_dict(), checkpoint_path)
                 print('The model has been saved!')
         
-        mlflow.pytorch.log_model(model, name="CNN-LSTM")
+        mlflow.pytorch.log_model(model, name="CNN")
         print('Training complete.')
 
 if __name__ == '__main__':
