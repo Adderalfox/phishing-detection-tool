@@ -15,11 +15,11 @@ mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("Phishing Detection")
 
 # ========== Config ==========
-CSV_PATH = '../data/Phishing_URL_Dataset.csv'
+CSV_PATH = '../data/Phishing_URL_Dataset_4.csv'
 ARTIFACTS_PATH = '../artifacts/'
 MODEL_SAVE_DIR = '../models/'
 BATCH_SIZE = 32
-EPOCHS = 20
+EPOCHS = 10
 LEARNING_RATE = 0.0005
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -75,14 +75,18 @@ def evaluate(model, dataloader):
 def main():
     with mlflow.start_run(run_name="cnn-lstm-run"):
         mlflow.log_param("lr", LEARNING_RATE)
-        mlflow.log_param("model", "CNN-LSTM")
+        mlflow.log_param("Models", "CNN-LSTM-1")
         mlflow.log_param("batch_size", BATCH_SIZE)
         mlflow.log_param("epochs", EPOCHS)
+        mlflow.log_param("Dataset", CSV_PATH)
+        mlflow.set_tag("dataset", CSV_PATH)
 
         print('Preprocessing...')
-        X_train, X_val, y_train, y_val = preprocess_dataset(CSV_PATH, save_path=ARTIFACTS_PATH)
+        X_train, X_val, y_train, y_val = preprocess_dataset(CSV_PATH, model_num=4, save_path=ARTIFACTS_PATH)
 
-        with open(os.path.join(ARTIFACTS_PATH, 'preprocess_meta.json')) as f:
+        print(len(X_train))
+
+        with open(os.path.join(ARTIFACTS_PATH, 'preprocess_meta_4.json')) as f:
             meta = json.load(f)
         vocab_size = len(meta['char2idx'])
         # maxlen = meta['maxlen']
@@ -92,6 +96,8 @@ def main():
 
         train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
+
+        print(len(train_loader))
 
         model = PhishModel(vocab_size).to(DEVICE)
         loss_fn = nn.CrossEntropyLoss()
@@ -113,7 +119,7 @@ def main():
 
             if val_accuracy > best_accuracy:
                 best_accuracy = val_accuracy
-                checkpoint_path = os.path.join(MODEL_SAVE_DIR, 'best_model.pt')
+                checkpoint_path = os.path.join(MODEL_SAVE_DIR, 'best_model_4.pt')
                 torch.save(model.state_dict(), checkpoint_path)
                 print('The model has been saved!')
         
