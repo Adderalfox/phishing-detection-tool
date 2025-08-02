@@ -23,10 +23,10 @@ def encode_url(url, char2idx, maxlen=200):
         encoded += [0] * (maxlen - len(encoded))
     return encoded
 
-def preprocess_dataset(csv_path, save_path='../artifacts/', maxlen=200, test_size=0.2):
+def preprocess_dataset(csv_path, model_num, save_path='../artifacts/', maxlen=200, test_size=0.2):
     df = pd.read_csv(csv_path)
     df = df[['URL', 'label']]
-    df['label'] = df['label'].apply(lambda x: 0 if x == 1 else 1)
+    # df['label'] = df['label'].apply(lambda x: 0 if x == 1 else 1)
     df['clean_url'] = df['URL'].apply(clean_url)
 
     char2idx, idx2char = build_vocab(df['clean_url'].tolist())
@@ -39,7 +39,7 @@ def preprocess_dataset(csv_path, save_path='../artifacts/', maxlen=200, test_siz
 
     os.makedirs(save_path, exist_ok=True)
     
-    with open(os.path.join(save_path, 'preprocess_meta.json'), 'w') as f:
+    with open(os.path.join(save_path, f'preprocess_meta_{model_num}.json'), 'w') as f:
         json.dump({'char2idx': char2idx, 'maxlen': maxlen}, f)
     
     print('Preprocessing complete.')

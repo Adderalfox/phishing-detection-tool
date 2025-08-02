@@ -9,9 +9,9 @@ from train import PhishingDataset
 from tqdm import tqdm
 
 # ========== Config ==========
-CSV_PATH = '../data/Phishing_URL_Dataset.csv'
+CSV_PATH = '../data/Phishing_URL_Dataset_3.csv'
 ARTIFACTS_PATH = '../artifacts/'
-MODEL_PATH = '../models/best_model.pt'
+MODEL_PATH = '../models/best_model_3.pt'
 BATCH_SIZE = 64
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -36,7 +36,7 @@ def main():
     print("Loading data...")
     _, X_val, _, y_val = preprocess_dataset(CSV_PATH, save_path=ARTIFACTS_PATH)
 
-    with open(os.path.join(ARTIFACTS_PATH, 'preprocess_meta.json')) as f:
+    with open(os.path.join(ARTIFACTS_PATH, 'preprocess_meta_3.json')) as f:
         meta = json.load(f)
     vocab_size = len(meta['char2idx'])
 
